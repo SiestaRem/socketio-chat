@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RemSiesta 聊天应用</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+    <script type="text/javascript" src="{{url_for('static', filename='index.js')}}"></script>
+</head>
+<body>
+    <!-- 通知容器 -->
+    <div id="notificationContainer"></div>
+    
+    <!-- 主容器 -->
+    <div class="container">
+        <!-- 左侧边栏 -->
+        <div class="sidebar">
+            <div class="user-info">
+                <div class="avatar" id="userAvatar">U</div>
+                <div class="user-details">
+                    <h3 id="username">{{name}}</h3>
+                    <p id="userStatus">在线</p>
+                </div>
+            </div>
+            
+            <div class="sidebar-section">
+                <h3><i class="fas fa-users"></i> 群组 <span class="status-indicator"></span></h3>
+                <div class="list-container" id="groupList">
+                    <div class="list-item">
+                        <div class="badge"></div>
+                        <div class="name">群</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="sidebar-section">
+                <h3><i class="fas fa-user-friends"></i> 在线用户 <span class="status-indicator"></span></h3>
+                <div class="list-container" id="userList">
+                    <div class="list-item">
+                        <div class="badge"></div>
+                        <div class="name">张三</div>
+                        <div class="action">私聊</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 聊天区域 -->
+        <div class="chat-area">
+            <div class="chat-header">
+                <h2 id="currentChatTitle">聊天示例</h2>
+                <span class="status">在线</span>
+                <span class="members" id="memberCount">12 位成员</span>
+            </div>
+            
+            <div class="messages-container" id="messagesContainer">
+                <div class="message received">
+                    <div class="avatar">张</div>
+                    <div class="message-content">
+                        <div class="sender">张三</div>
+                        <div class="text">大家好，有人在吗？</div>
+                        <div class="time">10:30 AM</div>
+                    </div>
+                </div>
+                
+                <div class="message sent">
+                    <div class="avatar">我</div>
+                    <div class="message-content">
+                        <div class="sender">我</div>
+                        <div class="text">我在，有什么问题吗？</div>
+                        <div class="time">10:31 AM</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="message-input">
+                <input type="text" id="messageInput" placeholder="输入消息...">
+                <button id="sendButton"><i class="fas fa-paper-plane"></i></button>
+            </div>
+        </div>
+        
+        <!-- 右侧面板 -->
+        <div class="right-panel">
+            <h3 class="panel-title">群组管理</h3>
+            
+            <div class="group-form">
+                <h4>创建新群组</h4>
+                <input type="text" id="newGroupName" placeholder="输入群组名称">
+                <button id="createGroupBtn">创建群组</button>
+            </div>
+            
+            <div class="group-form">
+                <h4>加入群组</h4>
+                <input type="text" id="joinGroupName" placeholder="输入群组名称">
+                <button id="joinGroupBtn">加入群组</button>
+            </div>
+            
+            <div class="group-form">
+                <h4>离开群组</h4>
+                <input type="text" id="leaveGroupName" placeholder="输入群组名称">
+                <button id="leaveGroupBtn">离开群组</button>
+            </div>
+            
+            <div class="online-count">
+                <div class="dot"></div>
+                <span id="onlineCount">5 人在线</span>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

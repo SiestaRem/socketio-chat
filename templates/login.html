@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>设置昵称</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            padding: 20px;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 500px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+            padding: 40px 30px;
+            text-align: center;
+            animation: fadeIn 0.8s ease-out;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        h1 {
+            color: #333;
+            margin-bottom: 5px;
+            font-weight: 600;
+        }
+        
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 16px;
+        }
+        
+        .input-group {
+            position: relative;
+            margin-bottom: 20px;
+        }
+        
+        input {
+            width: 100%;
+            padding: 15px 20px 15px 50px;
+            border: 2px solid #ddd;
+            border-radius: 50px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            outline: none;
+        }
+        
+        input:focus {
+            border-color: #2575fc;
+            box-shadow: 0 0 0 4px rgba(37, 117, 252, 0.2);
+        }
+        
+        .input-icon {
+            position: absolute;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #999;
+            font-size: 20px;
+        }
+        
+        .btn {
+            background: linear-gradient(to right, #6a11cb, #2575fc);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 18px;
+            border-radius: 50px;
+            cursor: pointer;
+            width: 100%;
+            font-weight: 600;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(37, 117, 252, 0.4);
+            margin-top: 10px;
+        }
+        
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(37, 117, 252, 0.6);
+        }
+        
+        .btn:active {
+            transform: translateY(1px);
+        }
+        
+        .validation {
+            color: #e74c3c;
+            font-size: 14px;
+            margin-top: 8px;
+            text-align: left;
+            padding-left: 20px;
+            height: 20px;
+        }
+        
+        .char-count {
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #999;
+            font-size: 14px;
+        }
+        
+        .tip {
+            margin-top: 20px;
+            color: #666;
+            font-size: 14px;
+            font-style: italic;
+        }
+        
+        .error-box {
+            background-color: #ffebee;
+            color: #c62828;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            border-left: 4px solid #c62828;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .success-box {
+            background-color: #e8f5e9;
+            color: #2e7d32;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            border-left: 4px solid #2e7d32;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .user-avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: linear-gradient(to right, #6a11cb, #2575fc);
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 40px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="user-avatar">
+            <i class="fas fa-user"></i>
+        </div>
+        <h1>设置您的昵称</h1>
+        <p class="subtitle">选择一个独特的昵称开始聊天</p>
+        
+        {% if error %}
+        <div class="error-box">
+            <i class="fas fa-exclamation-circle"></i> {{ error }}
+        </div>
+        {% endif %}
+        
+        {% if success %}
+        <div class="success-box">
+            <i class="fas fa-check-circle"></i> {{ success }}
+        </div>
+        {% endif %}
+        
+        <form id="nickname-form" action="/set-nickname" method="POST">
+            <!-- 昵称输入 -->
+            <div class="input-group">
+                <i class="fas fa-user input-icon"></i>
+                <input type="text" id="nickname" name="nickname" placeholder="请输入昵称..." maxlength="20" required>
+                <div class="char-count"><span id="count">0</span>/20</div>
+            </div>
+            <div class="validation" id="nickname-validation"></div>
+            
+            <button type="submit" class="btn">
+                <i class="fas fa-check"></i> 确认昵称
+            </button>
+        </form>
+        
+        <div class="tip">
+            <i class="fas fa-info-circle"></i> 昵称应为2-20个字符，可以包含中文、字母、数字和下划线
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // 元素引用
+            const nicknameInput = document.getElementById('nickname');
+            const charCount = document.getElementById('count');
+            const nicknameForm = document.getElementById('nickname-form');
+            
+            // 昵称验证
+            nicknameInput.addEventListener('input', function() {
+                const length = this.value.length;
+                charCount.textContent = length;
+                
+                if (length === 0) {
+                    document.getElementById('nickname-validation').textContent = '';
+                } else if (length < 2) {
+                    document.getElementById('nickname-validation').textContent = '昵称至少需要2个字符';
+                } else if (length > 20) {
+                    document.getElementById('nickname-validation').textContent = '昵称不能超过20个字符';
+                } else if (!/^[\u4e00-\u9fa5a-zA-Z0-9_]+$/.test(this.value)) {
+                    document.getElementById('nickname-validation').textContent = '昵称只能包含中文、字母、数字和下划线';
+                } else {
+                    document.getElementById('nickname-validation').textContent = '';
+                }
+            });
+            
+            // 表单提交验证
+            nicknameForm.addEventListener('submit', function(e) {
+                const nickname = nicknameInput.value.trim();
+                let valid = true;
+                
+                // 昵称验证
+                if (nickname.length < 2 || nickname.length > 20) {
+                    document.getElementById('nickname-validation').textContent = '昵称长度应为2-20个字符';
+                    valid = false;
+                } else if (!/^[\u4e00-\u9fa5a-zA-Z0-9_]+$/.test(nickname)) {
+                    document.getElementById('nickname-validation').textContent = '昵称只能包含中文、字母、数字和下划线';
+                    valid = false;
+                }
+                
+                if (!valid) {
+                    e.preventDefault();
+                }
+            });
+            
+            // 初始聚焦到输入框
+            nicknameInput.focus();
+        });
+    </script>
+</body>
+</html>
