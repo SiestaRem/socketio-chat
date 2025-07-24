@@ -32,6 +32,8 @@ pip install -r requirements.txt
 python app.py
 ```
 
+## 新加Dockerfile 可以直接构建镜像
+
 应用启动后，在浏览器中访问：`http://localhost:5000`
 
 ## 项目结构
