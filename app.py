@@ -261,7 +261,7 @@ def get_room_id(nickname1, nickname2):
     id1,id2 = get_user_id_by_nickname(nickname=nickname1),get_user_id_by_nickname(nickname=nickname2)
     min_val, max_val = sorted([id1, id2])
     
-    return min_val * 100 + max_val
+    return min_val * 1000 + max_val
 
 
 @socketio.on('start_private_chat')
@@ -272,7 +272,6 @@ def handle_start_private_chat(target_user):
     join_room(room_id)
     
     data =  get_private_messages(user1_nickname=current_user,user2_nickname=target_user)
-    # data = [{'sender':'tt','receiver':'yy','content':'我喜欢你'},{'sender':'yy','receiver':'tt','content':'我也喜欢你'}]  ##测试用
 
 
     emit('loadHistoryMessages',data,room=request.sid)
