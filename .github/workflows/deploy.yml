@@ -1,0 +1,44 @@
+name: Deploy
+
+on:
+  push:
+    branches: [ main ]  # 监听main分支推送
+  workflow_dispatch:
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    # 2. 登录阿里云ACR
+    - name: Login to Aliyun ACR
+      uses: docker/login-action@v3
+      with:
+        registry: crpi-4xy74kxtn8ccqkhq.cn-beijing.personal.cr.aliyuncs.com
+        username: ${{ secrets.ALI_REGISTORY_NAME }}
+        password: ${{ secrets.ALI_REGISTORY_PASSWORD }}
+
+    # 3. 构建并推送镜像
+    - name: Build and Push
+      run: |
+        docker build -t crpi-4xy74kxtn8ccqkhq.cn-beijing.personal.cr.aliyuncs.com/socket-chat/socket-app:${{ github.sha }} .
+        docker push crpi-4xy74kxtn8ccqkhq.cn-beijing.personal.cr.aliyuncs.com/socket-chat/socket-app:${{ github.sha }}
+
+    # 4. 通过SSH连接服务器执行部署命令
+    - name: Deploy to Server
+      uses: appleboy/ssh-action@v1
+      with:
+        host: ${{ secrets.SERVER_IP }}
+        username: root
+        # password: ${{ secrets.SERVER_PASSWORD }}
+        key: ${{ secrets.SERVER_KEY }}
+        script: |
+          # 拉取最新镜像并重新部署
+          docker pull crpi-4xy74kxtn8ccqkhq.cn-beijing.personal.cr.aliyuncs.com/socket-chat/socket-app:${{ github.sha }}
+          docker stop socket-app || true
+          docker rm socket-app || true
+          docker run -d --name socket-app \
+            -p 5000:5000 \
+            crpi-4xy74kxtn8ccqkhq.cn-beijing.personal.cr.aliyuncs.com/socket-chat/socket-app:${{ github.sha }}
