@@ -32,8 +32,8 @@ jobs:
       with:
         host: ${{ secrets.SERVER_IP }}
         username: root
-        # password: ${{ secrets.SERVER_PASSWORD }}
-        key: ${{ secrets.SERVER_KEY }}
+        password: ${{ secrets.SERVER_PASSWORD }}
+        # key: ${{ secrets.SERVER_KEY }}
         script: |
           # 拉取最新镜像并重新部署
           docker pull crpi-4xy74kxtn8ccqkhq.cn-beijing.personal.cr.aliyuncs.com/socket-chat/socket-app:${{ github.sha }}
